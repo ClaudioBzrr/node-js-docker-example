@@ -3,5 +3,6 @@ node_modules
 .env
 .env.local
 prisma/**.db
+prisma/**.db-journal
 
 dist
