@@ -1,46 +1,46 @@
-import { IDefaults } from "@/entities/Defaults";
-import { IUser } from "@/entities/User";
-import { IUserRepository } from "../user-repository";
 import { prisma } from "@/prisma";
+import { IBase } from "@/types/entities/base";
+import { IUser } from "@/types/entities/user";
+import { IUserRepository } from "@/types/repositories/user-repository";
 
-export class PrismaUserRepository implements IUserRepository {
-  async create(data: Omit<IUser, keyof IDefaults>): Promise<IUser> {
-    const user = await prisma.user.create({ data }).catch((error: any) => {
-      throw new Error(String(error));
-    });
-    return user;
-  }
-  async findOne(filter: Omit<IUser, "password">): Promise<IUser> {
-    const user = await prisma.user
-      .findFirstOrThrow({ where: filter })
-      .catch((error: any) => {
-        throw new Error(String(error));
-      });
-    return user;
-  }
-  async findMany(filter?: Omit<IUser, "password">): Promise<IUser[]> {
-    const users = filter
-      ? await prisma.user.findMany({ where: filter }).catch((error: any) => {
-          throw new Error(String(error));
-        })
-      : await prisma.user.findMany().catch((error: any) => {
-          throw new Error(String(error));
-        });
-    return users;
-  }
-  async update(
-    filter: Omit<IUser, "password">,
-    data: Omit<IUser, keyof IDefaults>
-  ): Promise<void> {
-    await prisma.user
-      .updateMany({ where: filter, data })
-      .catch((error: any) => {
-        throw new Error(String(error));
-      });
-  }
-  async delete(filter: Omit<IUser, "password">): Promise<void> {
-    await prisma.user.delete({ where: filter }).catch((error: any) => {
-      throw new Error(String(error));
-    });
-  }
+export class PrismaUserRepository implements IUserRepository{
+    async create(data: Omit<IUser, keyof IBase>):Promise<IUser>{
+        try{
+            const response = await prisma.user.create({data})
+            return response
+        }catch(err){
+            throw new Error(`${err}`)
+        }
+    }
+    async findOne (filter: Partial<IUser>):Promise<IUser>{
+        try{
+            const response =  await prisma.user.findFirstOrThrow({where:filter})
+            return response
+        }catch(err){
+            throw new Error(`${err}`)
+        }
+    }
+    async findMany(filter?: Partial<IUser>):Promise<IUser[]>{
+        try{
+            const response = filter? prisma.user.findMany({where:filter}) : prisma.user.findMany()
+            return response
+        }catch(err){
+            throw new Error(`${err}`)
+        }
+    }
+    async update (filter: Partial<IUser>, data: Partial<Omit<IUser, keyof IBase>>):Promise<void>{
+        try{
+            await prisma.user.updateMany({where:filter, data})
+        }catch(err){
+            throw new Error(`${err}`)
+        }
+    }
+    async delete(filter: Partial<IUser>):Promise<void>{
+        try{
+            await prisma.user.deleteMany({where:filter})
+        }catch(err){
+            throw new Error(`${err}`)
+        }
+    }
+    
 }
