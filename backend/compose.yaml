@@ -1,0 +1,13 @@
+
+services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: file:./dev.db
+      SERVER_PORT: 3002
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+
+
